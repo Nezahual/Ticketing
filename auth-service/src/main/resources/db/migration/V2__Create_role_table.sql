@@ -1,0 +1,6 @@
+CREATE TABLE role (
+    id BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+    name VARCHAR(20) NOT NULL,
+    description VARCHAR(100),
+    CONSTRAINT pk_role PRIMARY KEY (id)
+)

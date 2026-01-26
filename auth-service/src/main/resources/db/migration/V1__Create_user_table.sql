@@ -1,0 +1,8 @@
+CREATE TABLE users (
+    id BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+    username VARCHAR(100) NOT NULL UNIQUE,
+    password VARCHAR(100) NOT NULL,
+    mail VARCHAR(100) NOT NULL UNIQUE,
+    birth_date date,
+    CONSTRAINT pk_user PRIMARY KEY (id)
+)

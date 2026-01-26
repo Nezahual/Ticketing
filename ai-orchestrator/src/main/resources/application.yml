@@ -1,0 +1,21 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: ai-orchestrator
+  threads:
+    virtual:
+      enabled: true
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: ai-orchestrator-group
+      auto-offset-reset: earliest
+  data:
+    redis:
+      host: localhost
+      port: 6379
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY} # Leemos la API key de una variable de entorno, NUNCA en el código.

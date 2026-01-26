@@ -1,0 +1,33 @@
+server:
+  port: 8081
+
+logging:
+  level:
+    org.springframework.security: TRACE
+    org.springframework.security.oauth2: TRACE
+    org.springframework.security.oauth2.server.authorization: TRACE
+
+spring:
+  application:
+    name: auth-service
+  threads:
+    virtual:
+      enabled: true
+  datasource:
+    url: jdbc:postgresql://localhost:5432/ticketing
+    username: postgres
+    password: root
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  flyway:
+    enabled: true
+    baseline-on-migrate: true # Crea la tabla de Flyway si no existe
+    validate-migration-naming: true
+  security:
+    bruno-private-secret: super-secret-69d302f8-56b0-4690-8d3e-46806ccc0edf
