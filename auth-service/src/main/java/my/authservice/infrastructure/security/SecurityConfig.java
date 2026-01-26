@@ -13,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
@@ -62,7 +63,8 @@ public class SecurityConfig {
     OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(
         http);
 
-    http.csrf(csrf -> csrf.ignoringRequestMatchers("/*"))
+    http.csrf(csrf -> csrf
+                    .ignoringRequestMatchers("/oauth2/token", "/oauth2/introspect", "/oauth2/revoke"))
         .getConfigurer(OAuth2AuthorizationServerConfigurer.class)
         .oidc(Customizer.withDefaults());
 
@@ -78,7 +80,7 @@ public class SecurityConfig {
   @Bean
   @Order(2)
   public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
-    http.csrf(csrf -> csrf.ignoringRequestMatchers("/*"))
+    http.csrf(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests(
             auth ->
                 auth.requestMatchers("/api/public/**")
