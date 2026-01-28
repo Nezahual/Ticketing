@@ -30,13 +30,13 @@ public class UserController implements UsersApi {
     return new ResponseEntity<>(userMapper.toResponse(user), HttpStatus.CREATED);
   }
 
-  @GetMapping("/testUser")
+  @GetMapping("/users/testUser")
   public ResponseEntity<String> testUser() {
 
     return new ResponseEntity<>("autenticado user", HttpStatus.OK);
   }
 
-  @GetMapping("/testAdmin")
+  @GetMapping("/users/testAdmin")
   public ResponseEntity<String> testAdmin() {
 
     return new ResponseEntity<>("autenticado admin", HttpStatus.OK);
