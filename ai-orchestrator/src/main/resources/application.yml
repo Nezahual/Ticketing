@@ -4,18 +4,47 @@ server:
 spring:
   application:
     name: ai-orchestrator
-  threads:
-    virtual:
-      enabled: true
-  kafka:
-    bootstrap-servers: localhost:9092
-    consumer:
-      group-id: ai-orchestrator-group
-      auto-offset-reset: earliest
   data:
     redis:
       host: localhost
       port: 6379
   ai:
     openai:
-      api-key: ${OPENAI_API_KEY} # Leemos la API key de una variable de entorno, NUNCA en el código.
+      api-key: dummy
+    vectorstore:
+      chroma:
+        client:
+          host: localhost
+          port: 8000
+
+ai:
+  providers:
+    openai:
+      base-url: https://api.openai.com/v1/chat/completions
+      api-key: ${OPENAI_API_KEY}
+      models:
+        gpt-4o-mini:
+          temperature: 0.7
+          max-tokens: 8192
+        gpt-4o:
+          temperature: 0.7
+          max-tokens: 16384
+
+    groq:
+      base-url: https://api.groq.com/openai/v1
+      api-key: ${GROQ_API_KEY}
+      models:
+        "[llama-3.1-70b]": #necesario para escapar el punto
+          temperature: 0.8
+          max-tokens: 131072
+        gemma-2-27b:
+          temperature: 0.9
+          max-tokens: 8192
+
+    deepseek:
+      base-url: https://api.deepseek.com/v1
+      api-key: ${DEEPSEEK_API_KEY}
+      models:
+        deepseek-chat:
+          temperature: 0.6
+          max-tokens: 4096
