@@ -139,7 +139,10 @@
                 <version>3.2.0</version>
                 <configuration>
                     <java>
-                        <googleJavaFormat/>
+                        <googleJavaFormat>
+                            <version>1.22.0</version>
+                            <style>AOSP</style>
+                        </googleJavaFormat>
                     </java>
                 </configuration>
             </plugin>
