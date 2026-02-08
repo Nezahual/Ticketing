@@ -1,6 +1,4 @@
 package my.aiorchestrator.domain.model.vos;
 
-public record InTicketVO(Long ticketId, String userName, String message) {
-
-
-}
+public record InTicketVO(
+        Long ticketId, String userName, String message, String aiProvider, String aiModel) {}
