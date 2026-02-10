@@ -8,10 +8,10 @@ public record AiModelsConfig(Map<String, AiProvider> providers) {
 
     public record AiProvider(String baseUrl, String apiKey, Map<String, AiModel> models) {
 
-        public record AiModel(float temperature, int maxTokens) {}
+        public record AiModel(double temperature, int maxTokens) {}
     }
 
-    public record AiConfig(String baseUrl, String apiKEy, float temperature, int maxTokens) {}
+    public record AiConfig(String baseUrl, String apiKEy, double temperature, int maxTokens) {}
 
     public AiConfig getConfig(String provider, String model) {
 
