@@ -40,6 +40,9 @@ ai:
         gemma-2-27b:
           temperature: 0.9
           max-tokens: 8192
+      "[llama-3.3-70b-versatile]":
+          temperature: 0.6
+          max-tokens: 4096
 
     deepseek:
       base-url: https://api.deepseek.com/v1
@@ -48,3 +51,6 @@ ai:
         deepseek-chat:
           temperature: 0.6
           max-tokens: 4096
+
+  defaultProvider: groq
+  defaultModel: llama-3.3-70b-versatile
