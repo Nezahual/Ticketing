@@ -20,22 +20,19 @@ public class TestController {
     private final AiService aiService;
 
     @GetMapping("/test")
-    public ResponseEntity<String> test(
-            @RequestParam String provider, @RequestParam String model) {
+    public ResponseEntity<String> test(@RequestParam String provider, @RequestParam String model) {
         aiService.sendTicketToAiOrchestrator(new InTicketVO(9L, "asd", "asd", "openai", "gpt-4o"));
         return new ResponseEntity<>("autenticado user", HttpStatus.OK);
     }
 
     @GetMapping("/test2")
-    public ResponseEntity<String> test2(
-          @RequestBody InTicketVO ticketVO) {
+    public ResponseEntity<String> test2(@RequestBody InTicketVO ticketVO) {
         aiService.sendTicketToAiOrchestrator(ticketVO);
         return new ResponseEntity<>("autenticado user", HttpStatus.OK);
     }
 
     @GetMapping("/test3")
-    public ResponseEntity<String> test3(
-            @RequestBody InReviewVO inReviewVO) {
+    public ResponseEntity<String> test3(@RequestBody InReviewVO inReviewVO) {
         aiService.sendReviewToAiOrchestrator(inReviewVO);
         return new ResponseEntity<>("autenticado user", HttpStatus.OK);
     }
