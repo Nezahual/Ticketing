@@ -40,7 +40,7 @@ ai:
         gemma-2-27b:
           temperature: 0.9
           max-tokens: 8192
-      "[llama-3.3-70b-versatile]":
+        "[llama-3.3-70b-versatile]":
           temperature: 0.6
           max-tokens: 4096
 

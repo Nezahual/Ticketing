@@ -1,12 +1,12 @@
 package my.aiorchestrator;
 
-import my.aiorchestrator.configuration.AiModelsConfig;
+import my.aiorchestrator.configuration.AiModelsProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 @SpringBootApplication
-@EnableConfigurationProperties(AiModelsConfig.class)
+@EnableConfigurationProperties(AiModelsProperties.class)
 public class AiOrchestratorApplication {
 
     public static void main(String[] args) {
