@@ -6,12 +6,15 @@ import lombok.extern.slf4j.Slf4j;
 import my.aiorchestrator.application.ports.outgoing.AiOrchestrator;
 import my.aiorchestrator.application.ports.outgoing.ChromaService;
 import my.aiorchestrator.configuration.AiModelsProperties;
-import my.aiorchestrator.domain.model.vos.InReviewVO;
-import my.aiorchestrator.domain.model.vos.InTicketVO;
-import my.aiorchestrator.domain.model.vos.OutReviewVO;
-import my.aiorchestrator.domain.model.vos.OutTicketVO;
+import my.aiorchestrator.domain.model.vos.*;
+import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.model.ChatModel;
+import org.springframework.ai.chat.model.ChatResponse;
+import org.springframework.ai.converter.BeanOutputConverter;
+import org.springframework.ai.converter.StructuredOutputConverter;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,8 +29,11 @@ public class AiOrchestratorAdapter implements AiOrchestrator {
     @Value("${ai.defaultProvider}")
     private String defaultProvider;
 
-    @Value("${ai.defaultProvider}")
+    @Value("${ai.defaultModel}")
     private String defaultModel;
+
+    @Value("classpath:SystemPrompts/ReviewEvaluator.txt")
+    private Resource reviewEvaluatorSystemPromptResource;
 
     @Override
     public OutTicketVO sendTicketToLLM(InTicketVO ticketVO) {
@@ -38,11 +44,30 @@ public class AiOrchestratorAdapter implements AiOrchestrator {
     }
 
     @Override
-    public OutReviewVO categorizeReviewFeeling(InReviewVO reviewVO) {
+    public OutReviewVO categorizeReviewFeeling(InReviewVO inReviewVO) {
 
         ChatModel model = this.loadModel(defaultProvider, defaultModel);
+        StructuredOutputConverter<OutFeelingScoreVO> converter =
+                new BeanOutputConverter<>(new ParameterizedTypeReference<>() {});
+        ChatClient client = ChatClient.builder(model).defaultUser(inReviewVO.message()).build();
 
-        return null;
+        ChatResponse rawResponse =
+                client.prompt()
+                        .system(
+                                s ->
+                                        s.text(reviewEvaluatorSystemPromptResource)
+                                                .param("format", converter.getFormat()))
+                        .user(inReviewVO.message())
+                        .call()
+                        .chatResponse();
+
+        return new OutReviewVO(
+                inReviewVO.reviewId(),
+                inReviewVO.userId(),
+                converter.convert(rawResponse.getResult().getOutput().getText()),
+                rawResponse.getMetadata().getUsage().getPromptTokens(),
+                rawResponse.getMetadata().getUsage().getCompletionTokens(),
+                rawResponse.getMetadata().getModel());
     }
 
     private ChatModel loadModel(String provider, String model) {

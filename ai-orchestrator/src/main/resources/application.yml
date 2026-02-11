@@ -20,7 +20,7 @@ spring:
 ai:
   providers:
     openai:
-      base-url: https://api.openai.com/v1/chat/completions
+      base-url: https://api.openai.com
       api-key: ${OPENAI_API_KEY}
       models:
         gpt-4o-mini:
@@ -31,7 +31,7 @@ ai:
           max-tokens: 16384
 
     groq:
-      base-url: https://api.groq.com/openai/v1
+      base-url: https://api.groq.com/openai
       api-key: ${GROQ_API_KEY}
       models:
         "[llama-3.1-70b]": #necesario para escapar el punto
@@ -45,7 +45,7 @@ ai:
           max-tokens: 4096
 
     deepseek:
-      base-url: https://api.deepseek.com/v1
+      base-url: https://api.deepseek.com
       api-key: ${DEEPSEEK_API_KEY}
       models:
         deepseek-chat:
