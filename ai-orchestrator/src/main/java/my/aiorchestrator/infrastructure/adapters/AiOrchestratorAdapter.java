@@ -70,6 +70,10 @@ public class AiOrchestratorAdapter implements AiOrchestrator {
                 rawResponse.getMetadata().getModel());
     }
 
+    public void getWeather(){
+        
+    }
+
     private ChatModel loadModel(String provider, String model) {
 
         return this.chatModels.get(provider + ":" + model);

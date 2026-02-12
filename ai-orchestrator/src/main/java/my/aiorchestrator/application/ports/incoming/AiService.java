@@ -10,4 +10,6 @@ public interface AiService {
     OutTicketVO sendTicketToAiOrchestrator(InTicketVO ticketVO);
 
     OutReviewVO sendReviewToAiOrchestrator(InReviewVO reviewVO);
+
+    void sendTravelFileToAiOrchestrator(File file)
 }

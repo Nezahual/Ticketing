@@ -9,6 +9,7 @@ import my.aiorchestrator.domain.model.vos.OutReviewVO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,6 +32,12 @@ public class TestController {
 
     @PostMapping("/test3")
     public ResponseEntity<OutReviewVO> test3(@RequestBody InReviewVO inReviewVO) {
+        OutReviewVO outReviewVO = aiService.sendReviewToAiOrchestrator(inReviewVO);
+        return new ResponseEntity<>(outReviewVO, HttpStatus.OK);
+    }
+
+    @PostMapping("/test4")
+    public ResponseEntity<OutReviewVO> test4(@RequestPart("nombreDelCampo") MultipartFile file) {
         OutReviewVO outReviewVO = aiService.sendReviewToAiOrchestrator(inReviewVO);
         return new ResponseEntity<>(outReviewVO, HttpStatus.OK);
     }
