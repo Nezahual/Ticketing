@@ -16,6 +16,18 @@ spring:
         client:
           host: localhost
           port: 8000
+  cloud:
+    aws:
+      credentials:
+        access-key: ${MINIO_USER}
+        secret-key: ${MINIO_PASS}
+      region:
+        static: eu-west-1
+      s3:
+        endpoint: http://localhost:9000  # http://host.docker.internal:9000 Docker Desktop
+        path-style-access-enabled: true
+
+
 
 ai:
   providers:
@@ -52,5 +64,8 @@ ai:
           temperature: 0.6
           max-tokens: 4096
 
-  defaultProvider: groq
-  defaultModel: llama-3.3-70b-versatile
+  default-provider: groq
+  default-model: llama-3.3-70b-versatile
+
+s3:
+  weather-bucket: weatherbucket

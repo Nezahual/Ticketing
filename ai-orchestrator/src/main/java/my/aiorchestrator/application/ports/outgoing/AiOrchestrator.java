@@ -1,13 +1,14 @@
 package my.aiorchestrator.application.ports.outgoing;
 
-import my.aiorchestrator.domain.model.vos.InReviewVO;
-import my.aiorchestrator.domain.model.vos.InTicketVO;
-import my.aiorchestrator.domain.model.vos.OutReviewVO;
-import my.aiorchestrator.domain.model.vos.OutTicketVO;
+import my.aiorchestrator.domain.model.vos.*;
+
+import java.io.IOException;
 
 public interface AiOrchestrator {
 
     OutTicketVO sendTicketToLLM(InTicketVO ticketVO);
 
     OutReviewVO categorizeReviewFeeling(InReviewVO reviewVO);
+
+    OutWeatherVO getWeatherForTravel(InWeatherVO weatherVO) throws IOException;
 }
