@@ -14,8 +14,8 @@ spring:
     vectorstore:
       chroma:
         client:
-          host: localhost
-          port: 8000
+          host: http://localhost:9002
+          port: 9002
   cloud:
     aws:
       credentials:
