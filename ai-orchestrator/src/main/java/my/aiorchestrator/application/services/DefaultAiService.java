@@ -1,13 +1,12 @@
 package my.aiorchestrator.application.services;
 
+import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import my.aiorchestrator.application.ports.incoming.AiService;
 import my.aiorchestrator.application.ports.outgoing.AiOrchestrator;
 import my.aiorchestrator.domain.model.vos.*;
 import org.springframework.stereotype.Service;
-
-import java.io.IOException;
 
 @Service
 @Slf4j

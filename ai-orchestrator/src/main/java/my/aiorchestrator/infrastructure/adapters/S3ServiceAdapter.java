@@ -3,18 +3,11 @@ package my.aiorchestrator.infrastructure.adapters;
 import io.awspring.cloud.s3.ObjectMetadata;
 import io.awspring.cloud.s3.S3Resource;
 import io.awspring.cloud.s3.S3Template;
+import java.io.*;
 import lombok.RequiredArgsConstructor;
 import my.aiorchestrator.application.ports.outgoing.S3Service;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
-import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
-import software.amazon.awssdk.regions.Region;
-import software.amazon.awssdk.services.s3.S3Client;
-
-import java.io.*;
-import java.net.URI;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +17,11 @@ public class S3ServiceAdapter implements S3Service {
 
     public void pushMultipartFileToBucket(MultipartFile file, String bucket) throws IOException {
 
-        s3Template.upload(bucket, file.getName(), file.getInputStream(), ObjectMetadata.builder().metadata("filename", file.getName()).build());
+        s3Template.upload(
+                bucket,
+                file.getName(),
+                file.getInputStream(),
+                ObjectMetadata.builder().metadata("filename", file.getName()).build());
     }
 
     @Override

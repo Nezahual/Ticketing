@@ -1,8 +1,7 @@
 package my.aiorchestrator.application.ports.incoming;
 
-import my.aiorchestrator.domain.model.vos.*;
-
 import java.io.IOException;
+import my.aiorchestrator.domain.model.vos.*;
 
 public interface AiService {
 

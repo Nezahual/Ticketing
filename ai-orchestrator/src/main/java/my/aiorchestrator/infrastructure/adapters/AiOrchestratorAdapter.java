@@ -1,11 +1,9 @@
 package my.aiorchestrator.infrastructure.adapters;
 
+import io.awspring.cloud.s3.S3Resource;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 import java.util.Map;
-
-import io.awspring.cloud.s3.S3Resource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import my.aiorchestrator.application.ports.outgoing.AiOrchestrator;
@@ -18,7 +16,6 @@ import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.converter.BeanOutputConverter;
 import org.springframework.ai.converter.StructuredOutputConverter;
-import org.springframework.ai.document.Document;
 import org.springframework.ai.transformer.splitter.TokenTextSplitter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -74,10 +71,9 @@ public class AiOrchestratorAdapter implements AiOrchestrator {
                         .call()
                         .chatResponse();
 
-
-        //TODO:
+        // TODO:
         /*if (rawResponse == null)*/
-            //lanzar excepción para enviar mensaje con excepción
+        // lanzar excepción para enviar mensaje con excepción
 
         return new OutReviewVO(
                 inReviewVO.reviewId(),
@@ -93,14 +89,12 @@ public class AiOrchestratorAdapter implements AiOrchestrator {
 
         S3Resource s3Resource = s3Service.downloadFromBucket(weatherBucket, inWeatherVO.fileName());
         String fullFile = s3Resource.getContentAsString(StandardCharsets.UTF_8);
-        //s3Service.deleteFileFromBucket(weatherBucket, inWeatherVO.fileName());
-        //List<String> splittedFile = tokenTextSplitter.split()
+        // s3Service.deleteFileFromBucket(weatherBucket, inWeatherVO.fileName());
+        // List<String> splittedFile = tokenTextSplitter.split()
         return null;
     }
 
-    public void getWeather(){
-        
-    }
+    public void getWeather() {}
 
     private ChatModel loadModel(String provider, String model) {
 

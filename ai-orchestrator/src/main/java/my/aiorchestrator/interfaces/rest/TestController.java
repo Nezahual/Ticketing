@@ -1,5 +1,6 @@
 package my.aiorchestrator.interfaces.rest;
 
+import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import my.aiorchestrator.application.ports.incoming.AiService;
@@ -12,8 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
@@ -42,7 +41,8 @@ public class TestController {
     }
 
     @PostMapping("/test4")
-    public ResponseEntity<String> test4(@RequestPart("file") MultipartFile file) throws IOException {
+    public ResponseEntity<String> test4(@RequestPart("file") MultipartFile file)
+            throws IOException {
 
         s3Service.pushMultipartFileToBucket(file, "weatherbucket");
         aiService.sendTravelFileToAiOrchestrator(new InWeatherVO(123L, file.getName()));

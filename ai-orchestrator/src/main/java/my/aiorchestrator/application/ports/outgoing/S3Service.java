@@ -1,10 +1,8 @@
 package my.aiorchestrator.application.ports.outgoing;
 
 import io.awspring.cloud.s3.S3Resource;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
 import java.io.IOException;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface S3Service {
 
