@@ -1,5 +1,6 @@
 package my.aiorchestrator.infrastructure.adapters;
 
+import io.awspring.cloud.s3.ObjectMetadata;
 import io.awspring.cloud.s3.S3Resource;
 import io.awspring.cloud.s3.S3Template;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +24,7 @@ public class S3ServiceAdapter implements S3Service {
 
     public void pushMultipartFileToBucket(MultipartFile file, String bucket) throws IOException {
 
-        s3Template.upload(bucket, file.getName(), file.getInputStream());
+        s3Template.upload(bucket, file.getName(), file.getInputStream(), ObjectMetadata.builder().metadata("filename", file.getName()).build());
     }
 
     @Override
