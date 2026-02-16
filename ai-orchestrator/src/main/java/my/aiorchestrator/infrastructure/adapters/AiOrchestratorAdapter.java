@@ -94,7 +94,7 @@ public class AiOrchestratorAdapter implements AiOrchestrator {
         S3Resource s3Resource = s3Service.downloadFromBucket(weatherBucket, inWeatherVO.fileName());
         String fullFile = s3Resource.getContentAsString(StandardCharsets.UTF_8);
         s3Service.deleteFileFromBucket(weatherBucket, inWeatherVO.fileName());
-        //List<String> splittedFile = tokenTextSplitter.split(new Document(fullFile));
+        //List<String> splittedFile = tokenTextSplitter.split()
         return null;
     }
 
