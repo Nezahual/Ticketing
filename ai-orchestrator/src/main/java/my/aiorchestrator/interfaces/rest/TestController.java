@@ -1,14 +1,15 @@
 package my.aiorchestrator.interfaces.rest;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import my.aiorchestrator.application.ports.incoming.AiService;
 import my.aiorchestrator.application.ports.outgoing.S3Service;
-import my.aiorchestrator.domain.model.vos.InReviewVO;
-import my.aiorchestrator.domain.model.vos.InTicketVO;
-import my.aiorchestrator.domain.model.vos.InWeatherVO;
-import my.aiorchestrator.domain.model.vos.OutReviewVO;
+import my.aiorchestrator.domain.model.vos.*;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,9 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 @Slf4j
 public class TestController {
+
+    @Value("${s3.questions-bucket}")
+    private String questionsBucket;
 
     private final AiService aiService;
     private final S3Service s3Service;
@@ -41,12 +45,50 @@ public class TestController {
     }
 
     @PostMapping("/test4")
-    public ResponseEntity<String> test4(@RequestPart("file") MultipartFile file)
+    public ResponseEntity<String> test4(
+            @RequestPart("file") MultipartFile file,
+            @RequestPart("question") String question,
+            @RequestPart("aiProvider") String aiProvider,
+            @RequestPart("aiModel") String aiModel,
+            @RequestPart("sessionId") String sessionId,
+            @RequestPart("documentId") String documentId)
             throws IOException {
 
-        s3Service.pushMultipartFileToBucket(file, "weatherbucket");
-        aiService.sendTravelFileToAiOrchestrator(new InWeatherVO(123L, file.getName()));
-
+        this.fullService(file, question, aiProvider, aiModel, sessionId, documentId);
         return new ResponseEntity<>("", HttpStatus.OK);
+    }
+
+    private OutQuestionVO fullService(
+            MultipartFile file,
+            String question,
+            String aiProvider,
+            String aiModel,
+            String sessionId,
+            String documentId)
+            throws IOException {
+
+        // Todo esto irá en el ticket-service
+        if (StringUtils.isEmpty(sessionId)) sessionId = UUID.randomUUID().toString();
+
+        if (StringUtils.isEmpty(documentId)) documentId = UUID.randomUUID().toString();
+
+        String originalFilename = file.getOriginalFilename();
+
+        String s3Key = String.format("temp/%s/%s-%s", sessionId, documentId, originalFilename);
+
+        s3Service.pushMultipartFileToBucket(file, questionsBucket, s3Key);
+
+        InQuestionVO inQuestionVO =
+                new InQuestionVO(
+                        123L,
+                        s3Key,
+                        originalFilename,
+                        question,
+                        documentId,
+                        documentId,
+                        LocalDateTime.now(),
+                        aiProvider,
+                        aiModel);
+        return aiService.askAQuestion(inQuestionVO);
     }
 }

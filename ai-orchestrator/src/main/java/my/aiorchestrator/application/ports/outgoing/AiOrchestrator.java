@@ -9,5 +9,5 @@ public interface AiOrchestrator {
 
     OutReviewVO categorizeReviewFeeling(InReviewVO reviewVO);
 
-    OutWeatherVO getWeatherForTravel(InWeatherVO weatherVO) throws IOException;
+    OutQuestionVO askQuestionToLLm(InQuestionVO questionVO) throws IOException;
 }

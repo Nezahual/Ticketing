@@ -9,5 +9,5 @@ public interface AiService {
 
     OutReviewVO sendReviewToAiOrchestrator(InReviewVO reviewVO);
 
-    OutWeatherVO sendTravelFileToAiOrchestrator(InWeatherVO weatherVO) throws IOException;
+    OutQuestionVO askAQuestion(InQuestionVO questionVO) throws IOException;
 }

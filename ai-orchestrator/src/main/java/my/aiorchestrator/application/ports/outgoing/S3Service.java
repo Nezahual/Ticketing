@@ -6,7 +6,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface S3Service {
 
-    void pushMultipartFileToBucket(MultipartFile file, String bucket) throws IOException;
+    void pushMultipartFileToBucket(MultipartFile file, String bucket, String s3Ke)
+            throws IOException;
 
     S3Resource downloadFromBucket(String bucket, String key);
 

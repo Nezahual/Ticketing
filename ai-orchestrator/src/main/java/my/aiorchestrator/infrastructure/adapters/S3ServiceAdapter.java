@@ -15,13 +15,14 @@ public class S3ServiceAdapter implements S3Service {
 
     private final S3Template s3Template;
 
-    public void pushMultipartFileToBucket(MultipartFile file, String bucket) throws IOException {
+    public void pushMultipartFileToBucket(MultipartFile file, String bucket, String s3Key)
+            throws IOException {
 
         s3Template.upload(
                 bucket,
-                file.getName(),
+                s3Key,
                 file.getInputStream(),
-                ObjectMetadata.builder().metadata("filename", file.getName()).build());
+                ObjectMetadata.builder().metadata("filename", s3Key).build());
     }
 
     @Override

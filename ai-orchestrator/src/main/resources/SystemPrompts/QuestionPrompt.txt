@@ -1,0 +1,8 @@
+Trata de contestar usando la información proporcionada en el contexto.
+Si no encuentras respuesta relevante, intenta darme otra respuesta pero avisa claramente que es de tu propio contenido y no sale del contexto.
+
+Contexto:
+{question_answer_context}
+
+Pregunta:
+{query}

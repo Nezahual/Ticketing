@@ -28,8 +28,8 @@ public class DefaultAiService implements AiService {
     }
 
     @Override
-    public OutWeatherVO sendTravelFileToAiOrchestrator(InWeatherVO weatherVO) throws IOException {
+    public OutQuestionVO askAQuestion(InQuestionVO questionVO) throws IOException {
 
-        return aiOrchestrator.getWeatherForTravel(weatherVO);
+        return aiOrchestrator.askQuestionToLLm(questionVO);
     }
 }
