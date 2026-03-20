@@ -29,13 +29,13 @@ public class TestController {
     @GetMapping("/test")
     public ResponseEntity<String> test(@RequestParam String provider, @RequestParam String model) {
         aiService.sendTicketToAiOrchestrator(new InTicketVO(9L, "asd", "asd", "openai", "gpt-4o"));
-        return new ResponseEntity<>("autenticado user", HttpStatus.OK);
+        return new ResponseEntity<>("autenticado userId", HttpStatus.OK);
     }
 
     @PostMapping("/test2")
     public ResponseEntity<String> test2(@RequestBody InTicketVO ticketVO) {
         aiService.sendTicketToAiOrchestrator(ticketVO);
-        return new ResponseEntity<>("autenticado user", HttpStatus.OK);
+        return new ResponseEntity<>("autenticado userId", HttpStatus.OK);
     }
 
     @PostMapping("/test3")
@@ -46,7 +46,7 @@ public class TestController {
 
     @PostMapping("/test4")
     public ResponseEntity<String> test4(
-            @RequestPart("file") MultipartFile file,
+            @RequestPart(value = "file", required = false) MultipartFile file,
             @RequestPart("question") String question,
             @RequestPart("aiProvider") String aiProvider,
             @RequestPart("aiModel") String aiModel,
@@ -72,11 +72,11 @@ public class TestController {
 
         if (StringUtils.isEmpty(documentId)) documentId = UUID.randomUUID().toString();
 
-        String originalFilename = file.getOriginalFilename();
+        String originalFilename = file != null ? file.getOriginalFilename() : "";
 
         String s3Key = String.format("temp/%s/%s-%s", sessionId, documentId, originalFilename);
 
-        s3Service.pushMultipartFileToBucket(file, questionsBucket, s3Key);
+        if (file != null) s3Service.pushMultipartFileToBucket(file, questionsBucket, s3Key);
 
         InQuestionVO inQuestionVO =
                 new InQuestionVO(
@@ -84,7 +84,7 @@ public class TestController {
                         s3Key,
                         originalFilename,
                         question,
-                        documentId,
+                        sessionId,
                         documentId,
                         LocalDateTime.now(),
                         aiProvider,

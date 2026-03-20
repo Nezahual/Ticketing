@@ -1,9 +1,6 @@
 package my.aiorchestrator.infrastructure.adapters;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import java.time.LocalDateTime;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -23,14 +20,10 @@ import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.prompt.PromptTemplate;
 import org.springframework.ai.converter.BeanOutputConverter;
 import org.springframework.ai.converter.StructuredOutputConverter;
-import org.springframework.ai.openai.OpenAiChatModel;
-import org.springframework.ai.openai.OpenAiChatOptions;
-import org.springframework.ai.openai.api.OpenAiApi;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClient;
 
 @Service
 @Slf4j
@@ -98,61 +91,34 @@ public class AiOrchestratorAdapter implements AiOrchestrator {
     }
 
     @Override
-    public OutQuestionVO askQuestionToLLm(InQuestionVO inQuestionVO) {
+    public OutQuestionVO askQuestionToLLm(InQuestionVO inQuestionVO) throws IOException {
 
         ChatModel model = this.loadModel(inQuestionVO.aiProvider(), inQuestionVO.aiModel());
-        ChatClient client = ChatClient.builder(model).defaultUser(inQuestionVO.question()).defaultAdvisors(simpleLoggerAdvisor).build();
+        ChatClient client =
+                ChatClient.builder(model)
+                        .defaultUser(inQuestionVO.question())
+                        .defaultAdvisors(simpleLoggerAdvisor) //todo: eliminar al acabar
+                        .build();
         ChatClient.ChatClientRequestSpec prompt = client.prompt();
 
-        if (!StringUtils.isEmpty(inQuestionVO.fileName())) {
-            Map<String, Object> metadata =
-                    this.buildDocumentMetadata(
-                            inQuestionVO.sessionId(),
-                            inQuestionVO.user(),
-                            inQuestionVO.documentId(),
-                            inQuestionVO.fileName(),
-                            inQuestionVO.uploadedAt());
-            chromaServiceAdapter.ingestDocument(
-                    inQuestionVO.fileName(), inQuestionVO.documentId(), metadata);
-            PromptTemplate promptTemplate =
-                    PromptTemplate.builder().resource(questionSystemPromptResource).build();
-            QuestionAnswerAdvisor advisor =
-                    chromaServiceAdapter.buildDocumentAdvisor(
-                            promptTemplate, inQuestionVO.question());
+        String documentId = chromaServiceAdapter.ingestDocument(
+                inQuestionVO.filename(),
+                inQuestionVO.originalFilename(),
+                inQuestionVO.userId(),
+                inQuestionVO.uploadedAt());
 
-            prompt.advisors(advisor);
-        }
+
+        PromptTemplate promptTemplate =
+                PromptTemplate.builder().resource(questionSystemPromptResource).build();
+        QuestionAnswerAdvisor advisor =
+                chromaServiceAdapter.buildDocumentAdvisor(
+                        promptTemplate, inQuestionVO.question(), documentId);
+        prompt.advisors(advisor);
 
         ChatResponse rawResponse = prompt.call().chatResponse();
-        String textContext = rawResponse.getResult().getOutput().getText();
+        String textResponse = rawResponse.getResult().getOutput().getText();
 
-        return null;
-    }
-
-    private OutQuestionVO askQuestionToLLm2(InQuestionVO inQuestionVO) {
-
-        ChatModel model = this.loadModel(defaultProvider, defaultModel);
-        QuestionAnswerAdvisor advisor;
-        ChatClient client;
-
-        if (!StringUtils.isEmpty(inQuestionVO.fileName())) {
-            Map<String, Object> metadata =
-                    this.buildDocumentMetadata(
-                            inQuestionVO.sessionId(),
-                            inQuestionVO.user(),
-                            inQuestionVO.documentId(),
-                            inQuestionVO.fileName(),
-                            inQuestionVO.uploadedAt());
-            chromaServiceAdapter.ingestDocument(
-                    inQuestionVO.fileName(), inQuestionVO.documentId(), metadata);
-            PromptTemplate prompt =
-                    PromptTemplate.builder().resource(questionSystemPromptResource).build();
-            advisor = chromaServiceAdapter.buildDocumentAdvisor(prompt, inQuestionVO.question());
-            client = this.customChatClientBuilder(model, inQuestionVO.question(), List.of(advisor));
-        } else client = this.customChatClientBuilder(model, "", null);
-
-        client.prompt();
-
+        log.info(textResponse);
         return null;
     }
 
@@ -165,26 +131,6 @@ public class AiOrchestratorAdapter implements AiOrchestrator {
                     .defaultAdvisors(advisors)
                     .build();
         else return ChatClient.builder(model).defaultSystem(systemString).build();
-    }
-
-    private Map<String, Object> buildDocumentMetadata(
-            String sessionId,
-            Long userId,
-            String documentId,
-            String filename,
-            LocalDateTime timestamp) {
-
-        return Map.of(
-                "sessionId",
-                sessionId,
-                "userId",
-                userId,
-                "documentId",
-                documentId,
-                "filename",
-                filename,
-                "timestamp",
-                timestamp);
     }
 
     private ChatModel loadModel(String provider, String model) {

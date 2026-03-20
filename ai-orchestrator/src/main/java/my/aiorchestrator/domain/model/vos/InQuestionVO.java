@@ -3,9 +3,9 @@ package my.aiorchestrator.domain.model.vos;
 import java.time.LocalDateTime;
 
 public record InQuestionVO(
-        Long user,
-        String fileName,
-        String originalFileName,
+        Long userId,
+        String filename,
+        String originalFilename,
         String question,
         String sessionId,
         String documentId,

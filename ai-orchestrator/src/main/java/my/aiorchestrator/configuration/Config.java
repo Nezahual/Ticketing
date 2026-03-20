@@ -19,7 +19,7 @@ public class Config {
     }
 
     @Bean
-    public SimpleLoggerAdvisor simpleLoggerAdvisor(){
+    public SimpleLoggerAdvisor simpleLoggerAdvisor() {
         return new SimpleLoggerAdvisor();
     }
 }
