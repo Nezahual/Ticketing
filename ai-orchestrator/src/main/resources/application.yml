@@ -1,3 +1,12 @@
+logging:
+  level:
+    org.springframework.ai.chroma: TRACE
+    org.springframework.web.client: TRACE
+    org.springframework.web.client.RestTemplate: TRACE
+    org.springframework.web.client.RestClient: DEBUG
+    org.springframework.ai: DEBUG
+    org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor: TRACE
+
 server:
   port: 8083
 
@@ -8,14 +17,37 @@ spring:
     redis:
       host: localhost
       port: 6379
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
   ai:
     openai:
-      api-key: dummy
+      api-key: ${OPENAI_API_KEY}
+      embedding:
+        options:
+          model: text-embedding-3-small
     vectorstore:
       chroma:
         client:
-          host: localhost
-          port: 8000
+          host: http://localhost
+          port: 9002
+        initialize-schema: true
+        tenant-name: default_tenant
+        database-name: default_database
+        collection-name: docs
+  cloud:
+    aws:
+      credentials:
+        access-key: ${MINIO_USER}
+        secret-key: ${MINIO_PASS}
+      region:
+        static: eu-west-1
+      s3:
+        endpoint: http://localhost:9000  # http://host.docker.internal:9000 Docker Desktop
+        path-style-access-enabled: true
+
+
 
 ai:
   providers:
@@ -52,5 +84,8 @@ ai:
           temperature: 0.6
           max-tokens: 4096
 
-  defaultProvider: groq
-  defaultModel: llama-3.3-70b-versatile
+  default-provider: groq
+  default-model: llama-3.3-70b-versatile
+
+s3:
+  questions-bucket: questionsbucket

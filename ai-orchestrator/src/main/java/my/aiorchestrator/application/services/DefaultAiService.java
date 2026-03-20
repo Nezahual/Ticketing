@@ -1,13 +1,11 @@
 package my.aiorchestrator.application.services;
 
+import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import my.aiorchestrator.application.ports.incoming.AiService;
 import my.aiorchestrator.application.ports.outgoing.AiOrchestrator;
-import my.aiorchestrator.domain.model.vos.InReviewVO;
-import my.aiorchestrator.domain.model.vos.InTicketVO;
-import my.aiorchestrator.domain.model.vos.OutReviewVO;
-import my.aiorchestrator.domain.model.vos.OutTicketVO;
+import my.aiorchestrator.domain.model.vos.*;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -27,5 +25,11 @@ public class DefaultAiService implements AiService {
     public OutReviewVO sendReviewToAiOrchestrator(InReviewVO reviewVO) {
 
         return aiOrchestrator.categorizeReviewFeeling(reviewVO);
+    }
+
+    @Override
+    public OutQuestionVO askAQuestion(InQuestionVO questionVO) throws IOException {
+
+        return aiOrchestrator.askQuestionToLLm(questionVO);
     }
 }

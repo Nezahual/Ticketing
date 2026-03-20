@@ -68,11 +68,6 @@
             <artifactId>jackson-databind-nullable</artifactId>
             <version>${jackson-databind-nullable.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.zalando</groupId>
-            <artifactId>problem-spring-web</artifactId>
-            <version>${zalando.problem}</version>
-        </dependency>
         <!-- Necesario para Argon (crifrado de pass) -->
         <dependency>
             <groupId>org.bouncycastle</groupId>

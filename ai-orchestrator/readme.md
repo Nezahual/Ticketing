@@ -1,0 +1,2 @@
+- Spring ai 1.1.0 porque las superiores de 1.x envían a los modelos un campo extra_data que no admiten y fallan las peticiones.
+- spring-ai-pdf-document-reader en lugar de spring-ai-tika-document-reader porque este último rompe el parseo de respuestas de openai.

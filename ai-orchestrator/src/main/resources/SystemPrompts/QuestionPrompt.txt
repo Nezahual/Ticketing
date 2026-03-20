@@ -1,0 +1,17 @@
+Try to answer using the information provided in the context.
+If you can't find a relevant answer, try to give me another answer, but clearly state that it's your own work and stays within the context.
+Your answer must be written in Spanish.
+
+**IMPORTANT FORMATTING RULES:**
+        1. For every statement you make that comes from a specific chunk, add a superscript number like this: [^1], [^2], etc.
+        2. At the end of your answer, include a "References" section with the corresponding notes:
+           [^1]: Source: [original_filename], Página [page_number]
+           [^2]: Source: [original_filename], Página [page_number]
+        3. The metadata for each chunk is included in the context. Use it to extract document name and page number.
+        4. If multiple statements come from the same source, reuse the same reference number.
+
+Contexto:
+{question_answer_context}
+
+Pregunta:
+{query}
